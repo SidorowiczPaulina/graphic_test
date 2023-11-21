@@ -37,7 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+<<<<<<< HEAD
     'viewer',
+=======
+>>>>>>> b244cbc6e72005f66f382dab19a60cea2e3dc5ec
 ]
 
 MIDDLEWARE = [
