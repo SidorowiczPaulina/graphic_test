@@ -1,29 +1,31 @@
-from django.db import models
 
+from django.contrib.auth.models import User
+from django.db import models
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     work_hours_limit = models.PositiveIntegerField()
-    availability = models.ManyToManyField(UserAvailability)
+    availability = models.ManyToManyField('viewer.UserAvailability')
 
     def __str__(self):
         return self.user.username
 
 # models.py
-from django.db import models
 
 class Shift(models.Model):
     shift_id = models.AutoField(primary_key=True)
-    shift_name = models.Choice(
-        First_Shift = f"8:00-16:00",
-        Second_Shift = f"14:00-22:00"
-    )
-    hours = models.IntegerField(8)
-    min_num_workers = models.PositiveIntegerField(2)
-    max_num_workers = models.PositiveIntegerField(3)
+    SHIFT_CHOICES = [
+        ('First_Shift', '8:00-16:00'),
+        ('Second_Shift', '14:00-22:00'),
+    ]
+    shift_name = models.CharField(max_length=20, choices=SHIFT_CHOICES)
+    hours = models.IntegerField(default=8)
+    min_num_workers = models.PositiveIntegerField(default=2)
+    max_num_workers = models.PositiveIntegerField(default=3)
 
     def __str__(self):
         return f"Shift {self.shift_id}"
+
 
 class UserAvailability(models.Model):
     user_availability_id = models.AutoField(primary_key=True)
