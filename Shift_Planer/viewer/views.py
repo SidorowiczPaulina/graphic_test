@@ -29,3 +29,16 @@ def user_logout(request):
 
 def base(request):
     return render(request, "base.html")
+
+def create_schedule(request):
+    return render(request, "create_schedule.html", {'form': forms})
+
+def enter_availability(request):
+    if request.method == 'POST':
+        form = UserAvailabilityForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('availability_list')
+    else:
+        form = UserAvailabilityForm()
+    return render(request, 'enter_availability.html', {'form': form})
