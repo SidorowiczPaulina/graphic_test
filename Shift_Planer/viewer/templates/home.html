@@ -3,8 +3,9 @@
 {% block content %}
   <h2>Welcome in graphic planner</h2>
     <h3>Let's do it!</h3>
-  <form method="post" action="{% url 'home' %}">
+  <form method="post" action="{% url 'create_schedule' %}">
     {% csrf_token %}
     {{ form.as_p }}
+  <button type="submit">Create</button>
   </form>
 {% endblock %}
