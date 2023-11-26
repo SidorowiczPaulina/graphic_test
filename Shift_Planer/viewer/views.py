@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
+from .forms import UserAvailabilityForm
+
 
 def register(request):
     if request.method == 'POST':
@@ -13,6 +15,7 @@ def register(request):
         form = UserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
 
+
 def user_login(request):
     if request.method == 'POST':
         form = AuthenticationForm(request=request, data=request.POST)
@@ -23,15 +26,20 @@ def user_login(request):
         form = AuthenticationForm()
     return render(request, 'registration/login.html', {'form': form})
 
+
 def user_logout(request):
     logout(request)
     return redirect('home')
 
+
 def base(request):
     return render(request, "base.html")
 
+
 def create_schedule(request):
-    return render(request, "create_schedule.html", {'form': forms})
+
+    return render(request, "create_schedule.html", {'form': form})
+
 
 def enter_availability(request):
     if request.method == 'POST':
@@ -42,3 +50,7 @@ def enter_availability(request):
     else:
         form = UserAvailabilityForm()
     return render(request, 'enter_availability.html', {'form': form})
+
+
+def home(request):
+    return render(request, 'home.html')

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Welcome in graphic planner</h2>
+    <h3>Let's do it!</h3>
+  <form method="post" action="{% url 'home' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+  </form>
+{% endblock %}
