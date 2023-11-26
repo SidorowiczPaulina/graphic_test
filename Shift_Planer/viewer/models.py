@@ -49,8 +49,7 @@ class Schedule(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     shift_id = models.ForeignKey(Shift, on_delete=models.CASCADE)
     work_date = models.DateField()
-    shift_start = models.DateTimeField()
-    shift_end = models.DateTimeField()
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(args, kwargs)

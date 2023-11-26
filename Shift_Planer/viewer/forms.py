@@ -1,8 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
-from .models import Schedule, UserAvailability
-
+from .models import Schedule, UserAvailability, Shift
 
 
 class RegistrationForm(UserCreationForm):
@@ -20,7 +19,7 @@ class LoginForm(AuthenticationForm):
 class ScheduleForm(forms.ModelForm):
     class Meta:
         model = Schedule
-        fields = ['user', 'work_date', 'shift_start', 'shift_end']
+        fields = ['user', 'work_date']
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -28,17 +27,9 @@ class ScheduleForm(forms.ModelForm):
 
         if user and not user.is_staff:
             self.fields['work_date'].widget.attrs['readonly'] = True
-            self.fields['shift_start'].widget.attrs['readonly'] = True
-            self.fields['shift_end'].widget.attrs['readonly'] = True
-
-
 
 
 class UserAvailabilityForm(forms.ModelForm):
     class Meta:
         model = UserAvailability
         fields = ['day', 'shift_preferences']
-
-
-
-
