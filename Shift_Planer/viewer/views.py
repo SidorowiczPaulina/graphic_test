@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
 from .forms import UserAvailabilityForm, ScheduleForm
+from django.contrib.auth.decorators import login_required
 
 
 def register(request):
@@ -36,14 +37,26 @@ def base(request):
     return render(request, "base.html")
 
 
+@login_required(login_url='login')
 def create_schedule(request):
+    user = request.user
+
     if request.method == "POST":
-        form = ScheduleForm(request.POST)
+        form = ScheduleForm(request.POST, user=user)
         if form.is_valid():
-            form.save()
+            instance = form.save(commit=False)
+
+            if user.is_staff:   #czy użytkownik to admin
+                instance.user = None
+            else:
+                instance.user = user
+
+            instance.save()
+
             return redirect('create_schedule')
     else:
         form = ScheduleForm()
+
     return render(request, "schedule/create_schedule.html", {'form': form})
 
 
@@ -60,3 +73,4 @@ def enter_availability(request):
 
 def home(request):
     return render(request, 'home.html')
+
