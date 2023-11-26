@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
-from .forms import UserAvailabilityForm
+from .forms import UserAvailabilityForm, ScheduleForm
 
 
 def register(request):
@@ -37,8 +37,14 @@ def base(request):
 
 
 def create_schedule(request):
-
-    return render(request, "create_schedule.html", {'form': form})
+    if request.method == "POST":
+        form = ScheduleForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('create_schedule')
+    else:
+        form = ScheduleForm()
+    return render(request, "schedule/create_schedule.html", {'form': form})
 
 
 def enter_availability(request):
