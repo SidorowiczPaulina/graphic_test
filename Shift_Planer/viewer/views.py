@@ -68,7 +68,8 @@ def enter_availability(request):
             return redirect('availability_list')
     else:
         form = UserAvailabilityForm()
-    return render(request, 'enter_availability.html', {'form': form})
+
+    return render(request, 'schedule/enter_availability.html', {'form': form})
 
 
 def home(request):
