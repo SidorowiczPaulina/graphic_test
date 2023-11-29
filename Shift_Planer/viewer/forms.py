@@ -40,6 +40,7 @@ class UserAvailabilityForm(forms.ModelForm):
         fields = ['day', 'shift_preferences']
 
     shift_preferences = forms.ChoiceField(choices=SHIFT_CHOICES)
+    day = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
 
     def __init__(self, *args, user=None, **kwargs):
         super(UserAvailabilityForm, self).__init__(*args, **kwargs)
