@@ -1,6 +1,9 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+from .constants import SHIFT_CHOICES
+
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     work_hours_limit = models.PositiveIntegerField()
@@ -12,11 +15,11 @@ class UserProfile(models.Model):
 # models.py
 
 class Shift(models.Model):
-    shift_id = models.AutoField(primary_key=True)
     SHIFT_CHOICES = [
         ('First_Shift', '8:00-16:00'),
         ('Second_Shift', '14:00-22:00'),
     ]
+    shift_id = models.AutoField(primary_key=True)
     shift_name = models.CharField(max_length=20, choices=SHIFT_CHOICES)
     hours = models.IntegerField(default=8)
     min_num_workers = models.PositiveIntegerField(default=2)
@@ -28,9 +31,9 @@ class Shift(models.Model):
 
 class UserAvailability(models.Model):
     user_availability_id = models.AutoField(primary_key=True)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    day = models.CharField(max_length=20)
-    shift_preferences = models.ForeignKey(Shift, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    day = models.DateField(blank=True)
+    shift_preferences = models.CharField(max_length=20, choices=SHIFT_CHOICES)
 
     def __str__(self):
         return f"{self.user.username}'s Availability"
