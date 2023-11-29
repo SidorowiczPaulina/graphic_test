@@ -33,3 +33,8 @@ class UserAvailabilityForm(forms.ModelForm):
     class Meta:
         model = UserAvailability
         fields = ['day', 'shift_preferences']
+
+    day = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+
+
+

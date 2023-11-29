@@ -13,11 +13,11 @@ class UserProfile(models.Model):
 
 class Shift(models.Model):
     shift_id = models.AutoField(primary_key=True)
-    SHIFT_CHOICES = [
+    SHIFT_CHOICES = (
         ('First_Shift', '8:00-16:00'),
         ('Second_Shift', '14:00-22:00'),
-    ]
-    shift_name = models.CharField(max_length=20, choices=SHIFT_CHOICES)
+    )
+    shift_name = models.CharField(max_length=150, choices=SHIFT_CHOICES)
     hours = models.IntegerField(default=8)
     min_num_workers = models.PositiveIntegerField(default=2)
     max_num_workers = models.PositiveIntegerField(default=3)
@@ -29,8 +29,8 @@ class Shift(models.Model):
 class UserAvailability(models.Model):
     user_availability_id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    day = models.CharField(max_length=20)
-    shift_preferences = models.ForeignKey(Shift, on_delete=models.CASCADE)
+    day = models.DateField()
+    shift_preferences = models.ForeignKey(Shift, on_delete=models.CASCADE, choices=Shift.SHIFT_CHOICES)
 
     def __str__(self):
         return f"{self.user.username}'s Availability"
