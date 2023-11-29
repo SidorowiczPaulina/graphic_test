@@ -30,7 +30,7 @@ class UserAvailability(models.Model):
     user_availability_id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     day = models.CharField(max_length=20)
-    shift_preferences = models.ForeignKey(Shift, on_delete=models.CASCADE)
+    shift_preferences = models.ForeignKey(Shift, on_delete=models.CASCADE, choices=Shift.SHIFT_CHOICES)
 
     def __str__(self):
         return f"{self.user.username}'s Availability"

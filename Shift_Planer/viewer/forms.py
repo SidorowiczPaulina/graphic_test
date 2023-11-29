@@ -12,7 +12,7 @@ class RegistrationForm(UserCreationForm):
 
 class LoginForm(AuthenticationForm):
     class Meta:
-        model = UserCreationForm
+        model = User  # Popraw błąd: zmień UserCreationForm na User
         fields = ['username', 'password']
 
 
@@ -33,3 +33,5 @@ class UserAvailabilityForm(forms.ModelForm):
     class Meta:
         model = UserAvailability
         fields = ['day', 'shift_preferences']
+
+    day = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))  # Dodaj widget dla pola 'day'

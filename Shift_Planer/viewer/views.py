@@ -46,7 +46,7 @@ def create_schedule(request):
         if form.is_valid():
             instance = form.save(commit=False)
 
-            if user.is_staff:   #czy użytkownik to admin
+            if not user.is_authenticated:   # czy użytkownik nie jest zalogowany (czyli jest gość)
                 instance.user = None
             else:
                 instance.user = user
@@ -58,6 +58,7 @@ def create_schedule(request):
         form = ScheduleForm()
 
     return render(request, "schedule/create_schedule.html", {'form': form})
+
 
 
 def enter_availability(request):
@@ -73,4 +74,3 @@ def enter_availability(request):
 
 def home(request):
     return render(request, 'home.html')
-
