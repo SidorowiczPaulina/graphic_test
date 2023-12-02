@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Schedule List</h2>
+  <ul>
+    {% for schedule in schedules %}
+      <li>{{ schedule.user.username }} - {{ schedule.work_date }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

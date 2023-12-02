@@ -1,11 +1,10 @@
 from django.contrib.auth import login, logout
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect
-
+from .models import UserAvailability, Schedule
 from .forms import ScheduleForm
 from .forms import UserAvailabilityForm
-
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 def register(request):
     if request.method == 'POST':
@@ -38,7 +37,11 @@ def user_logout(request):
 def base(request):
     return render(request, "base.html")
 
+def is_admin(user):
+    return user.is_authenticated and user.is_staff
 
+
+@user_passes_test(is_admin, login_url='login')
 @login_required(login_url='login')
 def create_schedule(request):
     user = request.user
@@ -60,6 +63,22 @@ def create_schedule(request):
         form = ScheduleForm()
 
     return render(request, "schedule/create_schedule.html", {'form': form})
+
+@user_passes_test(is_admin, login_url='login')
+@login_required(login_url='login')
+def generate_schedule(request):
+    # Tutaj umieść logikę do generowania harmonogramu na podstawie dyspozycji użytkowników
+    # Możesz skorzystać z funkcji zdefiniowanych w innych częściach kodu.
+
+    # Przykład:
+    user_availabilities = UserAvailability.objects.all()
+    for availability in user_availabilities:
+        # Tutaj dodaj kod do generowania harmonogramu na podstawie dyspozycji
+        # Pamiętaj o uwzględnieniu ograniczeń pracy, ilości godzin itp.
+        pass  # Placeholder, replace with actual logic
+
+    return redirect('schedule_list')
+
 
 
 def enter_availability(request):
@@ -86,4 +105,21 @@ def root(request):
 
 
 def availability_list(request):
-    return render(request, 'schedule/availability_list.html')
+    user_availabilities = UserAvailability.objects.filter(user_id=request.user)
+
+    context = {
+        'user_availabilities': user_availabilities,
+    }
+
+    return render(request, 'schedule/availability_list.html', context)\
+
+@user_passes_test(is_admin, login_url='login')
+@login_required(login_url='login')
+def schedule_list(request):
+    # Tutaj umieść logikę do pobierania i wyświetlania harmonogramu
+    # Możesz skorzystać z funkcji zdefiniowanych w innych częściach kodu.
+
+    # Przykład:
+    schedule = Schedule.objects.all()
+
+    return render(request, "schedule/schedule_list.html", {'schedule': schedule})

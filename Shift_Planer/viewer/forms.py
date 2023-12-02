@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
-
 from .constants import SHIFT_CHOICES
 from .models import Schedule
 from .models import UserAvailability
@@ -48,3 +47,8 @@ class UserAvailabilityForm(forms.ModelForm):
         # Ustaw początkowe dane dla pola 'user'
         if user:
             self.fields['user'] = forms.ModelChoiceField(queryset=User.objects.filter(pk=user.pk), initial=user)
+
+class AvailabilitySelectionForm(forms.ModelForm):
+    class Meta:
+        model = UserAvailability
+        fields = ['day', 'shift_preferences']

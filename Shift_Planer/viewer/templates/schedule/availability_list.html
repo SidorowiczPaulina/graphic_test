@@ -1,10 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block content %}
+  <h2>Availability List</h2>
+  <ul>
+    {% for availability in user_availabilities %}
+      <li>{{ availability.day }} - {{ availability.shift_preferences }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
