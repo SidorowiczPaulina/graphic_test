@@ -1,0 +1,12 @@
+class ScheduleForm(forms.ModelForm):
+    class Meta:
+        model = Schedule
+        fields = ['user_id', 'work_date']
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(ScheduleForm, self).__init__(*args, **kwargs)
+
+        if user and not user.is_staff:
+            self.fields['work_date'].widget.attrs['readonly'] = True
+            self.fields['work_date'].widget = forms.DateInput(attrs={'type': 'date'})

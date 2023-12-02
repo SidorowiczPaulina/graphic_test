@@ -48,7 +48,7 @@ def create_schedule(request):
         if form.is_valid():
             instance = form.save(commit=False)
 
-            if not user.is_authenticated:   # czy użytkownik nie jest zalogowany (czyli jest gość)
+            if not user.is_authenticated:  # czy użytkownik nie jest zalogowany (czyli jest gość)
                 instance.user = None
             else:
                 instance.user = user
@@ -62,17 +62,28 @@ def create_schedule(request):
     return render(request, "schedule/create_schedule.html", {'form': form})
 
 
-
 def enter_availability(request):
-    form = UserAvailabilityForm(request.POST or None)
     if request.method == 'POST':
+        form = UserAvailabilityForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = request.user
+            instance = form.save(commit=False)
+            instance.user = user
+            instance.save()
             return redirect('availability_list')
-
+    else:
+        form = UserAvailabilityForm()
     return render(request, 'schedule/enter_availability.html', {'form': form})
 
 
 
 def home(request):
     return render(request, 'home.html')
+
+
+def root(request):
+    return render(request, 'root.html')
+
+
+def availability_list(request):
+    return render(request, 'schedule/availability_list.html')

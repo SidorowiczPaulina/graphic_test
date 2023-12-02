@@ -31,12 +31,12 @@ class Shift(models.Model):
 
 class UserAvailability(models.Model):
     user_availability_id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)  # Upewnij się, że to pole istnieje
     day = models.DateField(blank=True)
     shift_preferences = models.CharField(max_length=20, choices=SHIFT_CHOICES)
 
     def __str__(self):
-        return f"{self.user.username}'s Availability"
+        return f"{self.user_id.username}'s Availability"
 
 class WorkRestrictions(models.Model):
     work_restriction_id = models.AutoField(primary_key=True)
