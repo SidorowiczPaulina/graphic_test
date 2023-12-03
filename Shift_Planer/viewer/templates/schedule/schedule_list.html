@@ -1,10 +1,28 @@
-{% extends 'base.html' %}
-
-{% block content %}
-  <h2>Schedule List</h2>
-  <ul>
-    {% for schedule in schedules %}
-      <li>{{ schedule.user.username }} - {{ schedule.work_date }}</li>
-    {% endfor %}
-  </ul>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Schedule List</title>
+</head>
+<body>
+    <h2>Schedule List</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Shift</th>
+                <th>Work Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for schedule_entry in schedule_entries %}
+                <tr>
+                    <td>{{ schedule_entry.user.username }}</td>
+                    <td>{{ schedule_entry.shift_id.shift_name }}</td>
+                    <td>{{ schedule_entry.work_date }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

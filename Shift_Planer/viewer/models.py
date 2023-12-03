@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
 from django.db import models
-
 from .constants import SHIFT_CHOICES
 
 
@@ -49,14 +48,9 @@ class WorkRestrictions(models.Model):
 
 class Schedule(models.Model):
     UniqueID = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     shift_id = models.ForeignKey(Shift, on_delete=models.CASCADE)
     work_date = models.DateField()
 
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(args, kwargs)
-        self.schedule_id = None
-
     def __str__(self):
-        return f"Schedule {self.schedule_id}"
+        return f"Schedule {self.UniqueID}"

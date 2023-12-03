@@ -3,6 +3,7 @@ from django.urls import path
 from . import views
 from .views import create_schedule, generate_schedule, schedule_list
 
+
 urlpatterns = [
     path('base/', views.base, name='base'),
     path('register/', views.register, name='register'),

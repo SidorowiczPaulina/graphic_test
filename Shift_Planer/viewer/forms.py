@@ -29,6 +29,16 @@ class ScheduleForm(forms.ModelForm):
 
         if user and not user.is_staff:
             self.fields['work_date'].widget.attrs['readonly'] = True
+            del self.fields['user']  # Usuń pole user dla zwykłego użytkownika
+            del self.fields['UniqueID']  # Usuń pole UniqueID
+
+    def save(self, commit=True):
+        # Ustaw pole user na None dla zwykłego użytkownika
+        if not self.instance.user.is_staff:
+            self.instance.user = None
+
+        return super(ScheduleForm, self).save(commit)
+
 
 
 
