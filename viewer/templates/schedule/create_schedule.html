@@ -1,0 +1,16 @@
+<!-- schedule_list.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Create Schedule</h2>
+  <form method="post" action="{% url 'create_schedule' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Create</button>
+  </form>
+
+  <form method="post" action="{% url 'generate_schedule' %}">
+    {% csrf_token %}
+    <button type="submit">Generate Schedule</button>
+  </form>
+{% endblock %}

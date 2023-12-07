@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Availability List</title>
+    <style>
+        /* Twoje istniejące style CSS */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h2 {
+            color: rgba(224, 91, 19, 0.94);
+        }
+
+        .availability-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .availability-table th, .availability-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .availability-table th {
+            background-color: #f2f2f2;
+        }
+
+        .availability-table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>User Availability List</h2>
+
+    {% if user_availabilities %}
+        <table class="availability-table">
+            <thead>
+                <tr>
+                    <th onclick="sortTable(0)">ID</th>
+                    <th onclick="sortTable(1)">User</th>
+                    <th onclick="sortTable(2)">Day</th>
+                    <th onclick="sortTable(3)">Shift Preferences</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for availability in user_availabilities %}
+                    <tr>
+                        <td>{{ availability.user_availability_id }}</td>
+                        <td>{{ availability.user_id.username }}</td>
+                        <td>{{ availability.day }}</td>
+                        <td>{{ availability.shift_preferences }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No availabilities found.</p>
+    {% endif %}
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    function sortTable(columnIndex) {
+        var table, rows, switching, i, x, y, shouldSwitch;
+        table = document.querySelector('.availability-table');
+        switching = true;
+
+        while (switching) {
+            switching = false;
+            rows = table.rows;
+
+            for (i = 1; i < (rows.length - 1); i++) {
+                shouldSwitch = false;
+
+                x = rows[i].getElementsByTagName('td')[columnIndex];
+                y = rows[i + 1].getElementsByTagName('td')[columnIndex];
+
+                if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                    shouldSwitch = true;
+                    break;
+                }
+            }
+
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+            }
+        }
+    }
+</script>
+
+</body>
+</html>

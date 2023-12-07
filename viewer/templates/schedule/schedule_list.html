@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Schedule List</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#scheduleTable').DataTable({
+                order: [[2, 'asc']]  // Sortowanie według trzeciej kolumny (indeks 2), czyli 'Work Date'
+            });
+        });
+    </script>
+</head>
+<body>
+    <h2>Schedule List</h2>
+    <table id="scheduleTable" border="1">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Shift</th>
+                <th>Work Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for schedule_entry in schedule_entries %}
+                <tr>
+                    <td>{{ schedule_entry.user.username }}</td>
+                    <td>{{ schedule_entry.shift_id.shift_name }}</td>
+                    <td>{{ schedule_entry.work_date }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
