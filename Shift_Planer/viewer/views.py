@@ -1,18 +1,15 @@
+from datetime import timedelta
+from django.contrib import messages
 from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect
-
 from . import models
-from .models import UserAvailability, Schedule
 from .forms import ScheduleForm
 from .forms import UserAvailabilityForm
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.contrib import messages
-from datetime import timedelta
-from django.utils import timezone
-from django.contrib import messages
-from django.shortcuts import render, redirect
 from .models import UserAvailability, Shift, Schedule, WorkRestrictions
+
+
 
 def register(request):
     if request.method == 'POST':
@@ -124,24 +121,22 @@ def schedule_list(request):
 @user_passes_test(is_admin, login_url='login')
 @login_required(login_url='login')
 def generate_schedule(request):
-
-
     users_availabilities = UserAvailability.objects.all()
-
 
     work_restrictions = WorkRestrictions.objects.first()
 
     if work_restrictions is None:
         messages.error(request, "Work restrictions not defined. Please define them first.")
-        return redirect('home')
-
 
     schedule_entries = []
 
-
     for user_availability in users_availabilities:
-        shift = Shift.objects.get(shift_name=user_availability.shift_preferences)
-
+        try:
+            shift = Shift.objects.get(shift_name=user_availability.shift_preferences)
+        except Shift.DoesNotExist:
+            # Obsłuż sytuację, gdy obiekt Shift nie istnieje
+            messages.error(request, f"Shift {user_availability.shift_preferences} does not exist.")
+            continue
 
         existing_hours_for_user = Schedule.objects.filter(
             user=user_availability.user_id,
@@ -149,7 +144,6 @@ def generate_schedule(request):
         ).aggregate(models.Sum('shift_id__hours'))['shift_id__hours__sum'] or 0
 
         if existing_hours_for_user + shift.hours <= work_restrictions.max_daily_hours:
-
             min_hours_between_shifts = work_restrictions.min_hours_between
 
             if Schedule.objects.filter(
@@ -157,7 +151,6 @@ def generate_schedule(request):
                 work_date__lt=user_availability.day,
                 work_date__gte=user_availability.day - timedelta(hours=min_hours_between_shifts)
             ).exists():
-
                 continue
 
             schedule_entry = Schedule.objects.create(
@@ -167,9 +160,6 @@ def generate_schedule(request):
             )
             schedule_entries.append(schedule_entry)
 
-
     all_schedule_entries = Schedule.objects.all()
 
     return render(request, 'schedule/schedule_list.html', {'schedule_entries': all_schedule_entries})
-
-    return redirect('create_schedule')

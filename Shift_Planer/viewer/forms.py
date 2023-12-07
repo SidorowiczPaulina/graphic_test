@@ -4,7 +4,8 @@ from django.contrib.auth.models import User
 from .constants import SHIFT_CHOICES
 from .models import Schedule
 from .models import UserAvailability
-
+from django.forms.widgets import DateInput
+from django.db.models import Sum
 
 class RegistrationForm(UserCreationForm):
     class Meta:
@@ -28,9 +29,13 @@ class ScheduleForm(forms.ModelForm):
         super(ScheduleForm, self).__init__(*args, **kwargs)
 
         if user and not user.is_staff:
-            self.fields['work_date'].widget.attrs['readonly'] = True
-            del self.fields['user']  # Usuń pole user dla zwykłego użytkownika
-            del self.fields['UniqueID']  # Usuń pole UniqueID
+            self.fields['work_date'].widget = DateInput(attrs={'type': 'date'})  # Zmiana widgetu
+
+            # Usuń pole user dla zwykłego użytkownika
+            del self.fields['user']
+
+            # Usuń pole UniqueID
+            del self.fields['UniqueID']
 
     def save(self, commit=True):
         # Ustaw pole user na None dla zwykłego użytkownika

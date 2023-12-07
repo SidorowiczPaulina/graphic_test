@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from .constants import SHIFT_CHOICES
-
+from django.db.models import Sum
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -10,6 +10,7 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.username
+
 
 # models.py
 
@@ -29,6 +30,7 @@ class Shift(models.Model):
 
 
 class UserAvailability(models.Model):
+    objects = None
     user_availability_id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)  # Upewnij się, że to pole istnieje
     day = models.DateField(blank=True)
@@ -36,6 +38,7 @@ class UserAvailability(models.Model):
 
     def __str__(self):
         return f"{self.user_id.username}'s Availability"
+
 
 class WorkRestrictions(models.Model):
     work_restriction_id = models.AutoField(primary_key=True)
@@ -45,6 +48,7 @@ class WorkRestrictions(models.Model):
 
     def __str__(self):
         return f"Work Restrictions {self.work_restriction_id}"
+
 
 class Schedule(models.Model):
     UniqueID = models.AutoField(primary_key=True)
