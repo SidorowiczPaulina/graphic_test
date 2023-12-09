@@ -8,6 +8,8 @@ from . import models
 from .forms import ScheduleForm
 from .forms import UserAvailabilityForm
 from .models import UserAvailability, Shift, Schedule, WorkRestrictions
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 
 
 
@@ -98,14 +100,21 @@ def root(request):
     return render(request, 'root.html')
 
 
+from django.contrib.auth.decorators import user_passes_test
+
 def availability_list(request):
-    user_availabilities = UserAvailability.objects.filter(user_id=request.user)
+    if request.user.is_staff:
+        # Administrator widzi wszystkie dyspozycje użytkowników
+        user_availabilities = UserAvailability.objects.all()
+    else:
+        # Zwykły użytkownik widzi tylko swoje dyspozycje
+        user_availabilities = UserAvailability.objects.filter(user_id=request.user)
 
     context = {
         'user_availabilities': user_availabilities,
     }
 
-    return render(request, 'schedule/availability_list.html', context)\
+    return render(request, 'schedule/availability_list.html', context)
 
 @user_passes_test(is_admin, login_url='login')
 @login_required(login_url='login')

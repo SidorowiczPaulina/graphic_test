@@ -1,10 +1,60 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Availability List</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Obsługa sortowania tabeli za pomocą jQuery
+            $("th").click(function () {
+                var table = $(this).parents('table').eq(0);
+                var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()));
+                this.asc = !this.asc;
+                if (!this.asc) {
+                    rows = rows.reverse();
+                }
+                for (var i = 0; i < rows.length; i++) {
+                    table.append(rows[i]);
+                }
+            });
 
-{% block content %}
-  <h2>Availability List</h2>
-  <ul>
-    {% for availability in user_availabilities %}
-      <li>{{ availability.day }} - {{ availability.shift_preferences }}</li>
-    {% endfor %}
-  </ul>
-{% endblock %}
+            // Porównaj komórki dla sortowania
+            function comparer(index) {
+                return function (a, b) {
+                    var valA = getCellValue(a, index), valB = getCellValue(b, index);
+                    return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB);
+                };
+            }
+
+            // Pobierz wartość komórki
+            function getCellValue(row, index) {
+                return $(row).children('td').eq(index).text();
+            }
+        });
+    </script>
+</head>
+<body>
+    <h2>Availability List</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Username</th>
+                <th class="sortable">Day</th>
+                <th class="sortable">Shift Preferences</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for availability in user_availabilities %}
+                <tr>
+                    <td>{{ availability.user_id.id }}</td>
+                    <td>{{ availability.user_id.username }}</td>
+                    <td>{{ availability.day }}</td>
+                    <td>{{ availability.shift_preferences }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
