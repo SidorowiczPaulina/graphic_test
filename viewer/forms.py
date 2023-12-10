@@ -6,6 +6,7 @@ from .models import Schedule
 from .models import UserAvailability
 from django.forms.widgets import DateInput
 from django.db.models import Sum
+from django.core.exceptions import ValidationError
 
 class RegistrationForm(UserCreationForm):
     class Meta:
@@ -59,9 +60,23 @@ class UserAvailabilityForm(forms.ModelForm):
     def __init__(self, *args, user=None, **kwargs):
         super(UserAvailabilityForm, self).__init__(*args, **kwargs)
 
-        # Ustaw początkowe dane dla pola 'user'
+        # Ustaw początkowe dane dla pola 'user_id'
         if user:
-            self.fields['user'] = forms.ModelChoiceField(queryset=User.objects.filter(pk=user.pk), initial=user)
+            self.fields['user_id'] = forms.ModelChoiceField(queryset=User.objects.filter(pk=user.pk), initial=user)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        user = cleaned_data.get('user_id')
+        day = cleaned_data.get('day')
+
+        # Sprawdź, czy istnieje już dyspozycja dla danego użytkownika na ten dzień
+        existing_availability = UserAvailability.objects.filter(user_id=user, day=day).exists()
+
+        if existing_availability:
+            raise ValidationError('Dyspozycja dla tego użytkownika na ten dzień już istnieje.')
+
+        return cleaned_data
+
 
 class AvailabilitySelectionForm(forms.ModelForm):
     class Meta:

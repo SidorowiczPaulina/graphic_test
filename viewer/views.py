@@ -10,7 +10,8 @@ from .forms import UserAvailabilityForm
 from .models import UserAvailability, Shift, Schedule, WorkRestrictions
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-
+from django.http import HttpResponse
+from reportlab.pdfgen import canvas
 
 
 def register(request):
@@ -89,6 +90,7 @@ def enter_availability(request):
     else:
         form = UserAvailabilityForm()
     return render(request, 'schedule/enter_availability.html', {'form': form})
+
 
 
 
