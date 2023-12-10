@@ -1,4 +1,8 @@
 <!-- schedule_list.html -->
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.6.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
 {% extends 'base.html' %}
 
 {% block content %}
@@ -13,4 +17,16 @@
     {% csrf_token %}
     <button type="submit">Generate Schedule</button>
   </form>
+<body>
+<!-- Dodaj na końcu pliku HTML przed zamknięciem tagu </body> -->
+<script>
+  $( function() {
+    $('.datepicker').datepicker({
+      dateFormat: 'yy-mm-dd',
+      showButtonPanel: true,
+    });
+  });
+</script>
+
+</body>
 {% endblock %}

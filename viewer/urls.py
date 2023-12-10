@@ -18,4 +18,5 @@ urlpatterns = [
     path('generate_schedule/', views.generate_schedule, name='generate_schedule'),
     path('schedule_list/', views.schedule_list, name='schedule_list'),
     path('generate_pdf/', views.generate_pdf, name='generate_pdf'),
+    path('main_menu/', views.main_menu, name='main_menu'),
 ]
