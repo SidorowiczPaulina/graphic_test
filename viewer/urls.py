@@ -17,6 +17,5 @@ urlpatterns = [
     path('availability_list', views.availability_list, name='availability_list'),
     path('generate_schedule/', views.generate_schedule, name='generate_schedule'),
     path('schedule_list/', views.schedule_list, name='schedule_list'),
-
-
+    path('generate_pdf/', views.generate_pdf, name='generate_pdf'),
 ]
