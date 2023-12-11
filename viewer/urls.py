@@ -3,6 +3,8 @@ from django.urls import path
 from . import views
 from .views import create_schedule, generate_schedule, schedule_list
 from django.urls import path
+#form django.conf import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = [
@@ -19,4 +21,5 @@ urlpatterns = [
     path('schedule_list/', views.schedule_list, name='schedule_list'),
     path('generate_pdf/', views.generate_pdf, name='generate_pdf'),
     path('main_menu/', views.main_menu, name='main_menu'),
+
 ]
