@@ -7,6 +7,9 @@ from .models import UserAvailability
 from django.forms.widgets import DateInput
 from django.db.models import Sum
 from django.core.exceptions import ValidationError
+from django import forms
+from django.core.exceptions import ValidationError
+from .models import UserAvailability, User
 
 class RegistrationForm(UserCreationForm):
     class Meta:
@@ -46,9 +49,6 @@ class ScheduleForm(forms.ModelForm):
         return super(ScheduleForm, self).save(commit)
 
 
-
-
-
 class UserAvailabilityForm(forms.ModelForm):
     class Meta:
         model = UserAvailability
@@ -73,7 +73,7 @@ class UserAvailabilityForm(forms.ModelForm):
         existing_availability = UserAvailability.objects.filter(user_id=user, day=day).exists()
 
         if existing_availability:
-            raise ValidationError('Dyspozycja dla tego użytkownika na ten dzień już istnieje.')
+            self.add_error('user_id', ValidationError('Dyspozycja dla tego użytkownika na ten dzień już istnieje.'))
 
         return cleaned_data
 
