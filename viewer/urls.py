@@ -1,9 +1,9 @@
-from django.contrib import admin
 from django.urls import path
+
 from . import views
-from .views import create_schedule, generate_schedule, schedule_list
-from django.urls import path
-from .views import generate_pdf
+
+# form django.conf import settings
+
 
 urlpatterns = [
     path('base/', views.base, name='base'),
@@ -18,6 +18,6 @@ urlpatterns = [
     path('generate_schedule/', views.generate_schedule, name='generate_schedule'),
     path('schedule_list/', views.schedule_list, name='schedule_list'),
     path('generate_pdf/', views.generate_pdf, name='generate_pdf'),
-
+    path('main_menu/', views.main_menu, name='main_menu'),
 
 ]

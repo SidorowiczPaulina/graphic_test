@@ -5,8 +5,16 @@
   <form method="post" action="{% url 'enter_availability' %}">
     {% csrf_token %}
     {{ form.as_p }}
-    {{ form.errors }}
-    {{ form.non_field_errors }}
+    {% if form.errors %}
+      <div class="alert alert-danger">
+        <strong>Popraw błędy poniżej:</strong>
+        {% for field, errors in form.errors.items %}
+          {% for error in errors %}
+
+          {% endfor %}
+        {% endfor %}
+      </div>
+    {% endif %}
     <button type="submit">Enter Availability</button>
   </form>
 {% endblock %}

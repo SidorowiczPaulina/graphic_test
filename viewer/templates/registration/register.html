@@ -1,10 +1,25 @@
-
 {% extends 'base.html' %}
+
 {% block content %}
-  <h2>Register</h2>
-  <form method="post" action="{% url 'register' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Register</button>
-  </form>
+<style>
+  .register-form{
+   background-color: rgba(253, 253, 253, 0.8); /* Przezroczysty biały kolor tła formularza */
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(1, 1, 1, 0.5);
+        opacity: 0.8;
+  }
+  h2, button {
+        color: black;
+    }
+</style>
+  <div class="register-form">
+    <h2>Register</h2>
+    <form method="post" action="{% url 'register' %}">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Register</button>
+    </form>
+  </div>
 {% endblock %}
+

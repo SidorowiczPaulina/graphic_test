@@ -1,10 +1,38 @@
 
-{% extends 'base.html' %}
 {% block content %}
-  <h2>Login</h2>
-  <form method="post" action="{% url 'login' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-  </form>
+  <style>
+    body {
+        background-image: url("/static/images/login.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 100vh;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 1;
+    }
+
+    .login-form {
+        background-color: rgba(253, 253, 253, 0.8); /* Przezroczysty biały kolor tła formularza */
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(1, 1, 1, 0.5); /* Cień */
+    }
+
+
+    h2, button {
+        color: black;
+    }
+  </style>
+
+  <div class="login-form">
+    <h2>Login</h2>
+    <form method="post" action="{% url 'login' %}">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Login</button>
+    </form>
+  </div>
 {% endblock %}
