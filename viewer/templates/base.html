@@ -12,11 +12,12 @@
 <body>
     <nav>
         <ul>
-            <li><a href="{% url 'base' %}">Home</a></li>
             {% if user.is_authenticated %}
-                <li><a href="{% url 'logout' %}">Logout</a></li>
-                <li><a href="{% url 'generate_schedule' %}">Generate Schedule</a></li>
+            <li><a href="{% url 'base' %}">Home</a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+            <li><a href="{% url 'generate_schedule' %}">Generate Schedule</a></li>
             <li><a href="{% url 'enter_availability' %}">Enter Availability</a></li>
+            <li><a href="{% url 'generate_pdf' %}">Generate pdf</a></li>
             {% else %}
                 <li><a href="{% url 'login' %}">Login</a></li>
                 <li><a href="{% url 'register' %}">Register</a></li>
