@@ -200,6 +200,8 @@ def generate_schedule(request):
 
     return render(request, 'schedule/schedule_list.html', {'schedule_entries': all_schedule_entries})
 
+@user_passes_test(is_admin, login_url='login')
+@login_required(login_url='login')
 def generate_pdf(request):
     # Pobierz posortowane wpisy według daty
     schedule_entries = Schedule.objects.order_by('work_date')
