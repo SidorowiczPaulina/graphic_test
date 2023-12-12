@@ -1,10 +1,8 @@
-from django.contrib import admin
 from django.urls import path
+
 from . import views
-from .views import create_schedule, generate_schedule, schedule_list
-from django.urls import path
-#form django.conf import settings
-from django.conf.urls.static import static
+
+# form django.conf import settings
 
 
 urlpatterns = [
