@@ -12,7 +12,29 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from reportlab.pdfgen import canvas
-
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Paragraph
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
+from reportlab.lib.styles import getSampleStyleSheet
+from django.utils import timezone
+from datetime import datetime
+from django.utils.timezone import make_aware
+from django.db import models
+from django.db.models import Sum
+from calendar import monthrange
+from datetime import date, timedelta
+from datetime import date, timedelta
+from calendar import monthrange
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required, user_passes_test
+from .models import UserAvailability, WorkRestrictions, Shift, Schedule  # Dodaj import dla modelu Schedule
+from django.db import models
+from .models import Schedule
+from django.shortcuts import render
+from django.db.models import Q
 
 def register(request):
     if request.method == 'POST':
@@ -47,6 +69,9 @@ def base(request):
 
 def is_admin(user):
     return user.is_authenticated and user.is_staff
+
+def main_menu(request):
+    return render(request, "schedule/main_menu.html")
 
 
 @user_passes_test(is_admin, login_url='login')
@@ -132,12 +157,38 @@ def schedule_list(request):
 @user_passes_test(is_admin, login_url='login')
 @login_required(login_url='login')
 def generate_schedule(request):
+    # Tworzenie obiektu WorkRestrictions, jeśli nie istnieje
+    work_restrictions, created = WorkRestrictions.objects.get_or_create(
+        max_daily_hours=8,
+        min_hours_between=12,
+        hours_limit=8
+    )
+
+    if created:
+        messages.info(request, "Work restrictions created successfully.")
+
+    # Tworzenie obiektów Shift, jeśli nie istnieją
+    shifts_data = [
+        {'shift_name': 'First_Shift', 'hours': 8, 'min_num_workers': 2, 'max_num_workers': 3},
+        {'shift_name': 'Second_Shift', 'hours': 8, 'min_num_workers': 2, 'max_num_workers': 3},
+        # Dodaj inne zmienne zmienne według potrzeb
+    ]
+
+    for shift_data in shifts_data:
+        shift, created = Shift.objects.get_or_create(
+            shift_name=shift_data['shift_name'],
+            defaults={
+                'hours': shift_data['hours'],
+                'min_num_workers': shift_data['min_num_workers'],
+                'max_num_workers': shift_data['max_num_workers']
+            }
+        )
+
+        if created:
+            messages.info(request, f"Shift {shift.shift_name} created successfully.")
+
+    # Pozostała część funkcji generate_schedule
     users_availabilities = UserAvailability.objects.all()
-
-    work_restrictions = WorkRestrictions.objects.first()
-
-    if work_restrictions is None:
-        messages.error(request, "Work restrictions not defined. Please define them first.")
 
     schedule_entries = []
 
@@ -145,7 +196,6 @@ def generate_schedule(request):
         try:
             shift = Shift.objects.get(shift_name=user_availability.shift_preferences)
         except Shift.DoesNotExist:
-            # Obsłuż sytuację, gdy obiekt Shift nie istnieje
             messages.error(request, f"Shift {user_availability.shift_preferences} does not exist.")
             continue
 
@@ -171,28 +221,76 @@ def generate_schedule(request):
             )
             schedule_entries.append(schedule_entry)
 
-    all_schedule_entries = Schedule.objects.all()
+    return render(request, 'schedule/schedule_list.html', {'schedule_entries': schedule_entries})
 
-    return render(request, 'schedule/schedule_list.html', {'schedule_entries': all_schedule_entries})
-
+@user_passes_test(is_admin, login_url='login')
+@login_required(login_url='login')
 def generate_pdf(request):
-    # Pobierz dane do umieszczenia w PDF, na przykład z bazy danych
-    schedule_entries = Schedule.objects.all()
+    # Pobierz posortowane wpisy według daty
+    schedule_entries = Schedule.objects.order_by('work_date')
 
-    # Utwórz nowy dokument PDF
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'inline; filename="schedule.pdf"'
-    p = canvas.Canvas(response)
 
-    # Dodaj treść do dokumentu PDF na podstawie danych
-    p.drawString(100, 800, "Schedule List")
+    doc = SimpleDocTemplate(response, pagesize=letter)
+    styles = getSampleStyleSheet()
 
-    y_position = 780
+    data = [['User', 'Shift', 'Work Date']]
+
     for schedule_entry in schedule_entries:
-        y_position -= 20
-        p.drawString(100, y_position, f"{schedule_entry.user.username} - {schedule_entry.shift_id.shift_name} - {schedule_entry.work_date}")
+        user = schedule_entry.user.username
+        shift = schedule_entry.shift_id.shift_name
 
-    p.showPage()
-    p.save()
+        # Konwertuj obiekt date na aware datetime
+        work_date = make_aware(datetime.combine(schedule_entry.work_date, datetime.min.time()))
+
+        # Użyj funkcji localtime
+        work_date = timezone.localtime(work_date).strftime('%Y-%m-%d')
+        data.append([user, shift, work_date])
+
+    # Utwórz tabelę z danymi
+    table = Table(data)
+
+    # Zdefiniuj style tabeli
+    style = TableStyle([('BACKGROUND', (0, 0), (-1, 0), '#77aaff'),
+                        ('TEXTCOLOR', (0, 0), (-1, 0), styles['Heading1'].textColor),
+                        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                        ('BACKGROUND', (0, 1), (-1, -1), '#eeeeee'),
+                        ('GRID', (0, 0), (-1, -1), 1, '#ffffff')])
+
+    # Zastosuj style do tabeli
+    table.setStyle(style)
+
+    content = [Paragraph("Schedule List", styles['Title']), table]
+
+    doc.build(content)
 
     return response
+
+
+
+
+@user_passes_test(is_admin, login_url='login')
+@login_required(login_url='login')
+def generate_monthly_schedule(request):
+    if request.method == 'POST':
+        selected_month = request.POST.get('selected_month')
+
+        try:
+            # Konwertuj wybrany miesiąc na datę
+            selected_date = datetime.strptime(selected_month, "%Y-%m").date()
+        except ValueError:
+            messages.error(request, "Invalid date format.")
+            return render(request, 'select_month.html')
+
+        # Pobierz wpisy z harmonogramu dla wybranego miesiąca
+        monthly_schedule_entries = Schedule.objects.filter(
+            work_date__month=selected_date.month,
+            work_date__year=selected_date.year
+        ).order_by('work_date')
+
+        return render(request, 'monthly_schedule.html', {'selected_month': selected_date, 'monthly_schedule_entries': monthly_schedule_entries})
+    else:
+        return render(request, 'select_month.html')

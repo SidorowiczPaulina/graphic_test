@@ -1,20 +1,74 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <div style="text-align: center;">
+<style>
+    body {
+        background-image: url("/static/images/home.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 100vh;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 1;
+    }
+
+    .home-form {
+        background-color: rgba(255, 236, 247, 0.8);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(1, 1, 1, 0.4);
+        text-align: center; /* Dodano właściwość text-align */
+    }
+
+    h2 {
+        color: black;
+        text-decoration: underline;
+        margin-bottom: 30px;
+    }
+
+    h3 {
+        color: dimgray;
+        margin-bottom: 30px;
+    }
+
+    button {
+        background-color: #efbfee;
+        color: black;
+        padding: 10px 20px;
+        border: 2px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+        margin-bottom: 30px;
+    }
+
+    button:hover {
+        background-color: #d466ee;
+    }
+
+    /* Zastosuj inne style, gdy kursor najedzie na przycisk */
+
+    a {
+        text-decoration: none;
+        color: #000;
+        margin: 0 10px;
+    }
+
+</style>
+<div class="home-form">
     <h2>Welcome to the Graphic Planner</h2>
-    <h3>Let's get started!</h3>
-
-    <form method="post" action="{% url 'create_schedule' %}">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit">Create</button>
+    <em><h3>Let's get started!</h3></em>
+    <form method="post" action="{% url 'enter_availability' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Create</button>
     </form>
-  </div>
 
-  <div style="position: absolute; top: 0; right: 0; padding: 10px;">
     <a href="#">Home</a> |
     <a href="#">About</a> |
     <a href="#">Contact</a>
-  </div>
+</div>
 {% endblock %}

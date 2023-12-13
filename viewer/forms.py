@@ -1,15 +1,13 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
-from .constants import SHIFT_CHOICES
-from .models import Schedule
-from .models import UserAvailability
-from django.forms.widgets import DateInput
 from django.db.models import Sum
 from django.core.exceptions import ValidationError
-from django import forms
-from django.core.exceptions import ValidationError
-from .models import UserAvailability, User
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
+from .constants import SHIFT_CHOICES
+from .models import Schedule, UserAvailability
+from django.forms.widgets import DateInput
 
 class RegistrationForm(UserCreationForm):
     class Meta:
@@ -28,6 +26,8 @@ class ScheduleForm(forms.ModelForm):
         model = Schedule
         fields = ['user', 'work_date']
 
+    work_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super(ScheduleForm, self).__init__(*args, **kwargs)
@@ -41,12 +41,19 @@ class ScheduleForm(forms.ModelForm):
             # Usuń pole UniqueID
             del self.fields['UniqueID']
 
+    your_date_field = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'text', 'class': 'datepicker'}),
+        input_formats=['%Y-%m-%d'],
+    )
+
+
     def save(self, commit=True):
         # Ustaw pole user na None dla zwykłego użytkownika
         if not self.instance.user.is_staff:
             self.instance.user = None
 
         return super(ScheduleForm, self).save(commit)
+
 
 
 class UserAvailabilityForm(forms.ModelForm):
@@ -78,6 +85,18 @@ class UserAvailabilityForm(forms.ModelForm):
         return cleaned_data
 
 
+    def clean(self):
+        cleaned_data = super().clean()
+        user = cleaned_data.get('user_id')
+        day = cleaned_data.get('day')
+
+        # Sprawdź, czy istnieje już dyspozycja dla danego użytkownika na ten dzień
+        existing_availability = UserAvailability.objects.filter(user_id=user, day=day).exists()
+
+        if existing_availability:
+            raise ValidationError('Dyspozycja dla tego użytkownika na ten dzień już istnieje.')
+
+        return cleaned_data
 class AvailabilitySelectionForm(forms.ModelForm):
     class Meta:
         model = UserAvailability

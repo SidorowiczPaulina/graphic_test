@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Month</title>
+</head>
+<body>
+    <h2>Select a Month</h2>
+
+    <form method="post" action="{% url 'generate_monthly_schedule' %}">
+        {% csrf_token %}
+        <label for="selected_month">Select a month:</label>
+        <input type="month" id="selected_month" name="selected_month" required>
+        <button type="submit">Generate Monthly Schedule</button>
+    </form>
+
+    <br>
+    <a href="{% url 'generate_schedule' %}">Go back to generate the general schedule</a>
+</body>
+</html>
