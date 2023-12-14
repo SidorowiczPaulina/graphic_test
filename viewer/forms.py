@@ -42,10 +42,6 @@ class ScheduleForm(forms.ModelForm):
             del self.fields['UniqueID']
 
 
-    your_date_field = forms.DateField(
-        widget=forms.DateInput(attrs={'type': 'text', 'class': 'datepicker'}),
-        input_formats=['%Y-%m-%d'],
-    )
 
 
     def save(self, commit=True):
