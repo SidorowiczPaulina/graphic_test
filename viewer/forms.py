@@ -101,3 +101,13 @@ class AvailabilitySelectionForm(forms.ModelForm):
     class Meta:
         model = UserAvailability
         fields = ['day', 'shift_preferences']
+
+class MonthlyScheduleForm(forms.Form):
+    MONTH_CHOICES = [
+        (1, 'January'),
+        (2, 'February'),
+        # Dodaj pozostałe miesiące
+    ]
+
+    month = forms.ChoiceField(choices=MONTH_CHOICES, label='Month')
+    year = forms.IntegerField(label='Year')

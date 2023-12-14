@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Generate Monthly Schedule</h2>
+  <form method="post" action="{% url 'generate_monthly_schedule' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Generate Schedule</button>
+  </form>
+{% endblock %}
