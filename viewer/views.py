@@ -67,7 +67,7 @@ def user_login(request):
         form = AuthenticationForm(request=request, data=request.POST)
         if form.is_valid():
             login(request, form.get_user())
-            return redirect('home')
+            return redirect('base')
     else:
         form = AuthenticationForm()
     return render(request, 'registration/login.html', {'form': form})
@@ -75,7 +75,7 @@ def user_login(request):
 
 def user_logout(request):
     logout(request)
-    return redirect('home')
+    return redirect('base')
 
 
 def base(request):
@@ -84,8 +84,6 @@ def base(request):
 def is_admin(user):
     return user.is_authenticated and user.is_staff
 
-def main_menu(request):
-    return render(request, "schedule/main_menu.html")
 
 
 @user_passes_test(is_admin, login_url='login')
@@ -132,9 +130,6 @@ def enter_availability(request):
 
 
 
-
-def home(request):
-    return render(request, 'home.html')
 
 
 def root(request):

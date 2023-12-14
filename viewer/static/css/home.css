@@ -12,8 +12,19 @@ body {
     opacity: 1;
 }
 
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Umieszcza ramkę na górze ekranu */
+}
+
 .content-container {
-    flex: 1; /* Rozciąga kontener na całą dostępną wysokość */
+    flex: 1;
 }
 
 .home-form {
@@ -24,7 +35,7 @@ body {
     text-align: center;
     width: 80%;
     max-width: 400px;
-    margin: 0 auto; /* Centralizuje ramkę */
+    margin: 0 auto;
 }
 
 
@@ -57,5 +68,6 @@ button:hover {
 a {
     text-decoration: none;
     color: #000;
-    margin: 0 10px;
+    margin: 10px;
 }
+
