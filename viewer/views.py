@@ -48,7 +48,7 @@ from .models import UserAvailability, Schedule, Shift, WorkRestrictions
 from datetime import date, timedelta
 from calendar import monthrange
 from django.db import models
-from .forms import MonthlyScheduleForm
+from django.contrib.auth.decorators import user_passes_test
 
 def register(request):
     if request.method == 'POST':
@@ -84,9 +84,6 @@ def base(request):
 def is_admin(user):
     return user.is_authenticated and user.is_staff
 
-
-
-
 def enter_availability(request):
     if request.method == 'POST':
         form = UserAvailabilityForm(request.POST)
@@ -106,7 +103,7 @@ def root(request):
     return render(request, 'root.html')
 
 
-from django.contrib.auth.decorators import user_passes_test
+
 
 def availability_list(request):
     if request.user.is_staff:
@@ -193,6 +190,7 @@ def schedule_list(request):
     all_schedule_entries = Schedule.objects.all()
 
     return render(request, 'schedule/schedule_list.html', {'schedule_entries': all_schedule_entries})
+
 
 
 @user_passes_test(is_admin, login_url='login')
@@ -311,4 +309,5 @@ def generate_pdf(request):
     doc.build(content)
 
     return response
+
 
