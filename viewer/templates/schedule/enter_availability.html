@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
-
+{% load static %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/availability.css' %}">
+<div class="availability-form">
   <h2>Enter Availability</h2>
   <form method="post" action="{% url 'enter_availability' %}">
     {% csrf_token %}
@@ -18,4 +20,5 @@
     {% endif %}
     <button type="submit">Enter Availability</button>
   </form>
+</div>
 {% endblock %}

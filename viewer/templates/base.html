@@ -13,11 +13,11 @@
     <nav>
         <ul>
             {% if user.is_authenticated %}
-            <li><a href="{% url 'base' %}">Home</a></li>
+            <li><a href="{% url 'home' %}">Home</a></li>
             <li><a href="{% url 'logout' %}">Logout</a></li>
-            <li><a href="{% url 'generate_schedule' %}">Generate Schedule</a></li>
+            <li><a href="{% url 'generate_schedule' %}">Generate Schedule <small><small><small><br>(for admin)</br></small></small></small></a></li>
             <li><a href="{% url 'enter_availability' %}">Enter Availability</a></li>
-            <li><a href="{% url 'generate_pdf' %}">Generate pdf</a></li>
+            <li><a href="{% url 'generate_pdf' %}">Generate pdf<small><small><small><br><br>(for admin)</br></br></small></small></small></a></li>
             {% else %}
                 <li><a href="{% url 'login' %}">Login</a></li>
                 <li><a href="{% url 'register' %}">Register</a></li>
