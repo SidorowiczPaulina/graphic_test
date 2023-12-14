@@ -3,9 +3,6 @@ from . import views
 from .views import generate_monthly_schedule
 
 
-# form django.conf import settings
-
-
 urlpatterns = [
     path('base/', views.base, name='base'),
     path('register/', views.register, name='register'),
@@ -17,5 +14,4 @@ urlpatterns = [
     path('generate_schedule/', views.generate_schedule, name='generate_schedule'),
     path('schedule_list/', views.schedule_list, name='schedule_list'),
     path('generate_pdf/', views.generate_pdf, name='generate_pdf'),
-    path('generate_monthly_schedule/', generate_monthly_schedule, name='generate_monthly_schedule'),
 ]
