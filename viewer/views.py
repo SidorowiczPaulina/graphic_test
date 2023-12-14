@@ -222,9 +222,9 @@ def generate_schedule(request):
             min_hours_between_shifts = work_restrictions.min_hours_between
 
             if Schedule.objects.filter(
-                user=user_availability.user_id,
-                work_date__lt=user_availability.day,
-                work_date__gte=user_availability.day - timedelta(hours=min_hours_between_shifts)
+                    user=user_availability.user_id,
+                    work_date__lt=user_availability.day,
+                    work_date__gte=user_availability.day - timedelta(hours=min_hours_between_shifts)
             ).exists():
                 continue
 
@@ -235,7 +235,9 @@ def generate_schedule(request):
             )
             schedule_entries.append(schedule_entry)
 
-    return render(request, 'schedule/schedule_list.html', {'schedule_entries': schedule_entries})
+    all_schedule_entries = Schedule.objects.all()
+
+    return render(request, 'schedule/schedule_list.html', {'schedule_entries': all_schedule_entries})
 
 @user_passes_test(is_admin, login_url='login')
 @login_required(login_url='login')
