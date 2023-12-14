@@ -42,6 +42,11 @@ class ScheduleForm(forms.ModelForm):
             del self.fields['UniqueID']
 
 
+    your_date_field = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'text', 'class': 'datepicker'}),
+        input_formats=['%Y-%m-%d'],
+    )
+
 
     def save(self, commit=True):
         # Ustaw pole user na None dla zwykłego użytkownika
@@ -97,3 +102,13 @@ class AvailabilitySelectionForm(forms.ModelForm):
     class Meta:
         model = UserAvailability
         fields = ['day', 'shift_preferences']
+
+class MonthlyScheduleForm(forms.Form):
+    MONTH_CHOICES = [
+        (1, 'January'),
+        (2, 'February'),
+        # Dodaj pozostałe miesiące
+    ]
+
+    month = forms.ChoiceField(choices=MONTH_CHOICES, label='Month')
+    year = forms.IntegerField(label='Year')
