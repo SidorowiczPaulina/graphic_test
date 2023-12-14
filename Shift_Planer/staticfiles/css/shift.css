@@ -1,0 +1,14 @@
+li a {
+    color: #C25100;
+}
+
+
+a:hover {
+    color: #3cc125;
+}
+
+
+body {
+    padding-left: 50%;
+    padding-top: 50%;
+}

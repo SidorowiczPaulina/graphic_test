@@ -1,7 +1,10 @@
 from django.contrib.auth.models import User
 from django.db import models
 from .constants import SHIFT_CHOICES
-from django.db.models import Sum
+from django import forms
+from django.contrib.auth.models import User
+from django.db import models
+
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -36,7 +39,7 @@ class UserAvailability(models.Model):
     day = models.DateField(blank=True)
     shift_preferences = models.CharField(max_length=20, choices=SHIFT_CHOICES)
 
-    def __str__(self):
+    def str(self):
         return f"{self.user_id.username}'s Availability"
 
 
@@ -55,6 +58,25 @@ class Schedule(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     shift_id = models.ForeignKey(Shift, on_delete=models.CASCADE)
     work_date = models.DateField()
+    month = models.IntegerField(default=0)  # Domyślna wartość
+    year = models.IntegerField(default=0)   # Domyślna wartość
 
     def __str__(self):
         return f"Schedule {self.UniqueID}"
+
+
+class ScheduleForm(forms.ModelForm):
+    class Meta:
+        model = Schedule
+        fields = ['user', 'work_date', 'month', 'year']
+        widgets = {
+            'user': forms.Select(attrs={'id': 'unique_id_user'}),
+            'work_date': forms.DateInput(attrs={'id': 'unique_id_work_date', 'type': 'date'}),
+        }
+
+    def save(self, commit=True):
+        if not self.instance.user.is_staff:
+            # Ustaw pole user na specjalnego użytkownika lub inny sposób obsługi braku przypisania użytkownika
+            self.instance.user = get_special_user()  # Zastąp funkcję get_special_user() odpowiednią implementacją
+
+        return super(ScheduleForm, self).save(commit)
