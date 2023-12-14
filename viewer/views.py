@@ -133,7 +133,6 @@ def schedule_list(request):
 
     return render(request, "schedule/schedule_list.html", {'schedule': schedule})
 
-
     if created:
         messages.info(request, "Work restrictions created successfully.")
 
@@ -312,30 +311,4 @@ def generate_pdf(request):
     doc.build(content)
 
     return response
-
-
-
-
-@user_passes_test(is_admin, login_url='login')
-@login_required(login_url='login')
-def generate_monthly_schedule(request):
-    if request.method == 'POST':
-        selected_month = request.POST.get('selected_month')
-
-        try:
-            # Konwertuj wybrany miesiąc na datę
-            selected_date = datetime.strptime(selected_month, "%Y-%m").date()
-        except ValueError:
-            messages.error(request, "Invalid date format.")
-            return render(request, 'select_month.html')
-
-        # Pobierz wpisy z harmonogramu dla wybranego miesiąca
-        monthly_schedule_entries = Schedule.objects.filter(
-            work_date__month=selected_date.month,
-            work_date__year=selected_date.year
-        ).order_by('work_date')
-
-        return render(request, 'monthly_schedule.html', {'selected_month': selected_date, 'monthly_schedule_entries': monthly_schedule_entries})
-    else:
-        return render(request, 'select_month.html')
 
