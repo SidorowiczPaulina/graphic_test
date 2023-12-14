@@ -304,10 +304,10 @@ def generate_monthly_schedule(request):
         all_schedule_entries = []
 
         # Pętla przez dni danego miesiąca
-        for day in range(1, int(monthrange(year, month)[1]) + 1):
+        for day in range(1, monthrange(int(year), int(month))[1] + 1):
 
             # Pobierz dostępność użytkowników dla danego dnia
-            users_availabilities = UserAvailability.objects.filter(day=date(year, month, day))
+            users_availabilities = UserAvailability.objects.filter(day=date(int(year), int(month), int(day)))
 
             # Inicjalizuj listę dla wpisów grafiku dla danego dnia
             schedule_entries = []
