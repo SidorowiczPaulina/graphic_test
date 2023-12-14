@@ -168,6 +168,7 @@ def schedule_list(request):
 
     return render(request, "schedule/schedule_list.html", {'schedule': schedule})
 
+
 @user_passes_test(is_admin, login_url='login')
 @login_required(login_url='login')
 def generate_schedule(request):
@@ -235,7 +236,7 @@ def generate_schedule(request):
             )
             schedule_entries.append(schedule_entry)
 
-    all_schedule_entries = Schedule.objects.all()
+    all_schedule_entries = Schedule.objects.all().order_by('work_date')
 
     return render(request, 'schedule/schedule_list.html', {'schedule_entries': all_schedule_entries})
 
