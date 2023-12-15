@@ -5,4 +5,14 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
+<<<<<<< HEAD
+  <component name="PyNamespacePackagesService">
+    <option name="namespacePackageFolders">
+      <list>
+        <option value="$MODULE_DIR$/viewer/static" />
+      </list>
+    </option>
+  </component>
+=======
+>>>>>>> origin/master
 </module>

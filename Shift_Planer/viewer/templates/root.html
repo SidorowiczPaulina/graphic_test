@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <style>
@@ -50,6 +52,7 @@ ul a:hover {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Hi! This is planner for you! {% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/root.css' %}">
 </head>
 <body>
    <nav>

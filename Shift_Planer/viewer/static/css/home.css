@@ -1,0 +1,73 @@
+body {
+    background-image: url("/static/images/home.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Umieszcza ramkę na dole ekranu */
+    padding-bottom: 20px; /* Dodatkowy margines od dołu, aby uniknąć przysłonięcia treści przez pasek przewijania */
+    opacity: 1;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Umieszcza ramkę na górze ekranu */
+}
+
+.content-container {
+    flex: 1;
+}
+
+.home-form {
+    background-color: rgba(255, 236, 247, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(1, 1, 1, 0.4);
+    text-align: center;
+    width: 80%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+
+h2 {
+    color: black;
+    text-decoration: underline;
+    margin-bottom: 30px;
+}
+
+h3 {
+    color: dimgray;
+    margin-bottom: 30px;
+}
+
+button {
+    background-color: #efbfee;
+    color: black;
+    padding: 10px 20px;
+    border: 2px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+button:hover {
+    background-color: #d466ee;
+}
+
+a {
+    text-decoration: none;
+    color: #000;
+    margin: 10px;
+}
+

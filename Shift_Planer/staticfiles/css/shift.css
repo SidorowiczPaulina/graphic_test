@@ -4,6 +4,10 @@ li a {
 
 
 a:hover {
+<<<<<<< HEAD
+    color: #da97f1;
+}
+=======
     color: #3cc125;
 }
 
@@ -12,3 +16,4 @@ body {
     padding-left: 50%;
     padding-top: 50%;
 }
+>>>>>>> origin/master

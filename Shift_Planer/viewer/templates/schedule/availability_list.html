@@ -19,16 +19,22 @@
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 10px;
         }
 
         h2 {
             color: rgba(224, 91, 19, 0.94);
+            grid-column: span 4;
+            text-align: center;
         }
 
         .availability-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            grid-column: span 4;
         }
 
         .availability-table th, .availability-table td {

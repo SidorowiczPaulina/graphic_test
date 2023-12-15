@@ -1,9 +1,7 @@
-from django.contrib.auth.models import User
-from django.db import models
-from .constants import SHIFT_CHOICES
 from django import forms
 from django.contrib.auth.models import User
 from django.db import models
+from .constants import SHIFT_CHOICES
 
 
 class UserProfile(models.Model):
@@ -14,8 +12,9 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username
 
+    class Meta:
+        app_label = 'viewer'
 
-# models.py
 
 class Shift(models.Model):
     SHIFT_CHOICES = [
@@ -33,13 +32,12 @@ class Shift(models.Model):
 
 
 class UserAvailability(models.Model):
-    objects = None
     user_availability_id = models.AutoField(primary_key=True)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)  # Upewnij się, że to pole istnieje
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     day = models.DateField(blank=True)
     shift_preferences = models.CharField(max_length=20, choices=SHIFT_CHOICES)
 
-    def str(self):
+    def __str__(self):
         return f"{self.user_id.username}'s Availability"
 
 
@@ -59,10 +57,14 @@ class Schedule(models.Model):
     shift_id = models.ForeignKey(Shift, on_delete=models.CASCADE)
     work_date = models.DateField()
     month = models.IntegerField(default=0)  # Domyślna wartość
-    year = models.IntegerField(default=0)   # Domyślna wartość
+    year = models.IntegerField(default=0)  # Domyślna wartość
 
     def __str__(self):
         return f"Schedule {self.UniqueID}"
+
+
+def get_special_user():
+    pass
 
 
 class ScheduleForm(forms.ModelForm):
@@ -77,6 +79,6 @@ class ScheduleForm(forms.ModelForm):
     def save(self, commit=True):
         if not self.instance.user.is_staff:
             # Ustaw pole user na specjalnego użytkownika lub inny sposób obsługi braku przypisania użytkownika
-            self.instance.user = get_special_user()  # Zastąp funkcję get_special_user() odpowiednią implementacją
+            get_special_user()
 
         return super(ScheduleForm, self).save(commit)
