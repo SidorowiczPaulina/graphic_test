@@ -68,19 +68,6 @@ class UserAvailabilityForm(forms.ModelForm):
         if user:
             self.fields['user_id'] = forms.ModelChoiceField(queryset=User.objects.filter(pk=user.pk), initial=user)
 
-    def clean(self):
-        cleaned_data = super().clean()
-        user = cleaned_data.get('user_id')
-        day = cleaned_data.get('day')
-
-        # Sprawdź, czy istnieje już dyspozycja dla danego użytkownika na ten dzień
-        existing_availability = UserAvailability.objects.filter(user_id=user, day=day).exists()
-
-        if existing_availability:
-            self.add_error('user_id', ValidationError('Dyspozycja dla tego użytkownika na ten dzień już istnieje.'))
-
-        return cleaned_data
-
 
     def clean(self):
         cleaned_data = super().clean()
@@ -94,6 +81,7 @@ class UserAvailabilityForm(forms.ModelForm):
             raise ValidationError('Dyspozycja dla tego użytkownika na ten dzień już istnieje.')
 
         return cleaned_data
+
 class AvailabilitySelectionForm(forms.ModelForm):
     class Meta:
         model = UserAvailability
