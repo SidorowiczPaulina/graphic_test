@@ -14,8 +14,9 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username
 
+    class Meta:
+        app_label = 'viewer'
 
-# models.py
 
 class Shift(models.Model):
     SHIFT_CHOICES = [
@@ -33,14 +34,14 @@ class Shift(models.Model):
 
 
 class UserAvailability(models.Model):
-    objects = None
     user_availability_id = models.AutoField(primary_key=True)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)  # Upewnij się, że to pole istnieje
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     day = models.DateField(blank=True)
     shift_preferences = models.CharField(max_length=20, choices=SHIFT_CHOICES)
 
-    def str(self):
+    def __str__(self):
         return f"{self.user_id.username}'s Availability"
+
 
 
 class WorkRestrictions(models.Model):

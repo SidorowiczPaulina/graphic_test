@@ -130,8 +130,6 @@ def schedule_list(request):
 
     return render(request, "schedule/schedule_list.html", {'schedule': schedule})
 
-
-
     if created:
         messages.info(request, "Work restrictions created successfully.")
 
@@ -311,3 +309,5 @@ def generate_pdf(request):
     doc.build(content)
 
     return response
+
+
